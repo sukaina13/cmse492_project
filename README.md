@@ -23,3 +23,9 @@ cmse492_project/
 git clone https://github.com/sukaina13/cmse492_project.git
 cd cmse492_project
 
+## Setup Instructions
+After cloning, create a virtual environment and install dependencies:
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
