@@ -66,3 +66,117 @@ Performance will be evaluated using precision, recall, F1-score, and area under 
 \end{figure}
 
 \end{document}
+\documentclass[11pt]{article}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{setspace}
+\geometry{margin=1in}
+\setstretch{1.15}
+
+\title{\textbf{Predicting Auto Insurance Claim Likelihood Using Ensemble Learning Under Extreme Class Imbalance}}
+\author{
+Sukaina D. Alkhalidy \\
+\texttt{alkhal13@msu.edu} \\
+October 2025 \\
+\href{https://github.com/sukaina13/cmse492_project}{https://github.com/sukaina13/cmse492\_project}
+}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Abstract}
+Predicting whether an auto insurance policyholder will file a claim in the next year is an important problem for both financial planning and fair risk assessment. This project explores how machine learning can improve claim prediction using the Porto Seguro Safe Driver dataset, a large and highly imbalanced dataset where only about 3.6\% of policyholders made a claim. I compare simple baseline models such as predicting the majority class and logistic regression with more advanced ensemble methods like Balanced Random Forest and EasyEnsemble, which are designed to handle class imbalance effectively.
+
+Preliminary results show that the EasyEnsemble model performs much better at identifying claim cases, increasing recall from 0.00 to around 0.58 and achieving an area under the ROC curve (AUC) of 0.63. These findings suggest that ensemble-based approaches can improve fairness and accuracy in predicting rare insurance claims. Ultimately, this project aims to build interpretable, data-driven models that help insurance companies make more informed and equitable decisions when assessing driver risk.
+
+\section{Background and Motivation}
+Predicting whether a driver will file an insurance claim is one of the most important and challenging tasks in the insurance industry. Each year, companies must decide how to set fair premiums while maintaining profitability and protecting customers from unfair pricing. A model that can accurately estimate the likelihood of a claim allows insurers to manage financial risk, detect potential fraud, and better allocate resources for claims investigation. However, the key challenge lies in the data itself—claim events are extremely rare, occurring in only about 3–4\% of all cases, which makes accurate prediction very difficult.
+
+Traditional statistical methods, such as logistic regression and generalized linear models, have long been used in insurance analytics. While these approaches are simple and interpretable, they tend to struggle with highly imbalanced datasets. In these cases, they often predict the majority class (“no claim”) almost exclusively, achieving high overall accuracy but poor recall for the minority class—the actual claim cases that matter most. This imbalance leads to models that appear strong on paper but fail in practice, where missing a true claim can lead to major financial losses.
+
+Machine learning offers a better way to handle this challenge. Ensemble-based models such as Balanced Random Forest and EasyEnsemble are designed to correct class imbalance by training on balanced subsets of data and combining their predictions. These models can identify rare claim cases more effectively while still maintaining generalization. They also produce interpretable results, such as feature importance rankings, which can reveal which policyholder or vehicle characteristics are most predictive of risk.
+
+The goal of this project is to develop and evaluate such ensemble learning models to improve the accuracy and fairness of claim prediction. By comparing baseline models (like logistic regression and majority-class prediction) with advanced ensemble methods, this project aims to demonstrate how data-driven approaches can enhance risk modeling and provide actionable insights for insurance companies.
+
+\section{Data Description}
+The dataset used in this project originates from Porto Seguro, one of Brazil’s largest auto and home insurance companies. It was released as part of the 2017 Kaggle competition \textit{“Porto Seguro’s Safe Driver Prediction,”} organized by Addison Howard, Adriano Moala, and Walter Reade. The dataset was collected internally by Porto Seguro through customer records, vehicle data, and claim history, and was shared to encourage innovation in risk modeling. The goal was to improve claim prediction accuracy so insurers could offer fairer pricing—lower premiums for safe drivers and more accurate risk assessment for higher-risk individuals.
+
+The training dataset contains 595,212 records and 59 variables, including 58 predictive features and one binary target variable. The features include demographic data (\texttt{ps\_ind\_*}), vehicle characteristics (\texttt{ps\_car\_*}), regional indicators (\texttt{ps\_reg\_*}), and engineered risk scores (\texttt{ps\_calc\_*}).
+
+From exploratory analysis, the dataset shows a severe class imbalance: only 3.6\% of policyholders filed claims. Some features such as \texttt{ps\_car\_03\_cat} and \texttt{ps\_car\_05\_cat} have large amounts of missing data (69\% and 45\%, respectively), while the rest are mostly complete.
+
+Preprocessing steps include imputing missing values with median (numerical) or mode (categorical), dropping features with more than 50\% missingness, and label encoding categorical variables. Since tree-based models are scale-invariant, feature scaling is not required. These steps ensure the data is clean, consistent, and ready for robust training.
+
+Two figures summarize the dataset:
+\begin{itemize}
+    \item \textbf{Figure 1:} Missing value rates by feature.
+    \item \textbf{Figure 2:} Target class imbalance.
+\end{itemize}
+
+\section{Proposed Methodology}
+This is a supervised learning problem framed as binary classification: predicting whether a driver will file an insurance claim in the next year. The goal is to identify the minority “claim” class accurately while avoiding bias toward the majority “no claim” class.
+
+To compare performance across complexity levels, three models will be tested:
+\begin{enumerate}
+    \item \textbf{Majority Class Baseline} – Always predicts “no claim.” Serves as a benchmark for imbalance problems.
+    \item \textbf{Weighted Logistic Regression} – A linear, interpretable model with class weighting to compensate for imbalance.
+    \item \textbf{Ensemble Models (Balanced Random Forest, EasyEnsembleClassifier)} – Advanced tree-based methods that rebalance and boost data to capture nonlinear relationships and improve recall.
+\end{enumerate}
+
+Model complexity increases from simple to advanced:  
+Baseline (no learning), Logistic Regression (low complexity), and Ensemble Models (high complexity capturing feature interactions).
+
+The workflow follows these steps:
+\begin{enumerate}
+    \item Clean and preprocess the dataset.
+    \item Perform stratified train/validation/test split.
+    \item Train and tune models with cross-validation.
+    \item Evaluate using accuracy, recall, precision, F1, and ROC–AUC.
+    \item Visualize results with ROC curves, confusion matrices, and feature importance plots.
+\end{enumerate}
+
+\section{Evaluation Framework}
+Because the dataset is highly imbalanced, accuracy alone isn’t enough. A model that always predicts “no claim” would achieve high accuracy but fail to identify true positives.
+
+The metrics used include:
+\begin{itemize}
+    \item \textbf{Recall} – measures how many true claim cases are caught.
+    \item \textbf{Precision} – measures how many predicted claims are actually correct.
+    \item \textbf{F1-score} – balances recall and precision.
+    \item \textbf{AUC (ROC)} – evaluates model separability across thresholds.
+\end{itemize}
+
+A stratified 70/15/15 train-validation-test split ensures both classes are represented equally.  
+The baseline model sets the floor: high accuracy but recall = 0. Advanced models will be evaluated against it.
+
+The project will be considered successful if:
+\begin{itemize}
+    \item Recall $\geq$ 0.55
+    \item AUC $\geq$ 0.65
+    \item Noticeably higher F1-score than the baseline
+\end{itemize}
+
+\section{Timeline and Milestones}
+This project runs from late October through December 8, 2025.
+\begin{itemize}
+    \item Week 1: Data cleaning and EDA
+    \item Weeks 2–3: Build baseline and logistic regression models
+    \item Weeks 4–5: Train ensemble models (Balanced RF, EasyEnsemble)
+    \item Week 6: Evaluate and tune models
+    \item Week 7: Write report and create figures
+    \item Week 8 (Dec 2–4): Prepare presentation
+    \item Week 9 (Dec 5–8): Final submission
+\end{itemize}
+
+A Gantt chart (Figure 3) visualizes the full timeline and dependencies between tasks.  
+Critical milestones include model evaluation and final reporting, with buffer time for debugging or retraining. The schedule aligns with course deadlines and allows flexibility for unforeseen issues.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../figures/gantt_chart.png}
+    \caption{Project timeline and milestones for CMSE 492.}
+\end{figure}
+
+\end{document}
