@@ -29,3 +29,10 @@ After cloning, create a virtual environment and install dependencies:
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+
+
+## Collaboration & Resources
+
+I used ChatGPT to assist with organizing sections, refining LaTeX formatting, and improving the clarity of my writing for this project proposal.  
+All analysis, code implementation, and final content were developed and verified independently.  
+I also used official documentation for Python, scikit-learn, and Kaggle’s Porto Seguro Safe Driver dataset for reference.
